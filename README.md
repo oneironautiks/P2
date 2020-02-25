@@ -12,3 +12,5 @@ https://ghibliapi.herokuapp.com/#section/Studio-Ghibli-API
 
 #### MVP Goals: An app with the capability for users to match film descriptions
 #### and their respective films.
+
+https://media.giphy.com/media/Wn74RUT0vjnoU98Hnt/giphy.gif
