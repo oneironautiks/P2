@@ -5,7 +5,7 @@ import AnswerOptions from './AnswerOptions';
 
 const Game = (props) => {
   const renderAnswerOptions = (answer) => {
-    console.log(props.answer)
+    //console.log(props.answer)
     return (
       <AnswerOptions
         key={answer.id}
