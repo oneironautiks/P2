@@ -7,8 +7,8 @@ import Game from './Game';
 // import QuestionsCount from './QuestionsCount';
 
 const BASE_URL = 'https://ghibliapi.herokuapp.com/films';
-const descrips = [];
-const titles = [];
+// const  =[];
+// const titles = [];
 
 class Container extends Component {
   constructor() {
@@ -21,8 +21,7 @@ class Container extends Component {
       answerOptions: [],
       answer: '',
       answersCount: {},
-      result: '',
-      correctAnswers: {}
+      score: 0
     };
     this.handleAnswerSelected = this.handleAnswerSelected.bind(this);
   }
@@ -30,7 +29,7 @@ class Container extends Component {
   fetchData = async () => {
     try {
       const res = await axios.get(BASE_URL);
-      console.log(res.data)
+      //console.log(res.data)
       this.setState({
         films: res.data
       })
@@ -43,19 +42,22 @@ class Container extends Component {
   async componentDidMount() {
     await this.fetchData();
     let { films } = this.state;
-    const { correctAnswers } = this.state;
-    console.log(films);
-
-    films.map((film) => titles.push(film.title));
-
-    films.map((film) => descrips.push(film.description));
-    titles.forEach((title, i) => correctAnswers[title] = descrips[i]);
-    console.log(correctAnswers)
-    const shuffledAnswers = this.shuffleArray(titles);
+    //const { correctAnswers } = this.state;
+    //films.map((film) => titles.push(film.title));
+    const questions = films.map(film => ({
+      id: film.id,
+      question: film.description
+    }));
+    const answers = films.map(film => ({
+      id: film.id,
+      answer: film.title
+    }));
+    //films.map((film) => descrips.push(film.description));
+    //titles.forEach((title, i) => correctAnswers[title] = descrips[i]);
+    //const shuffledAnswers = this.shuffleArray(titles);
     this.setState({
-      question: descrips[0],
-      answerOptions: shuffledAnswers,
-      correctAnswers: correctAnswers
+      question: questions[this.state.questionId - 1],
+      answerOptions: answers,
     });
   }
 
@@ -63,14 +65,9 @@ class Container extends Component {
   shuffleArray(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
-    // While there remain elements to shuffle...
     while (0 !== currentIndex) {
-
-      // Pick a remaining element...
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
-
-      // And swap it with the current element.
       temporaryValue = array[currentIndex];
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
@@ -87,36 +84,61 @@ class Container extends Component {
       },
       answer: answer
     }));
+    //console.log(answer)
+    //console.log(this.state.question.id)
+    this.checkAnswers(answer);
   }
 
   setNextQuestion() {
     const counter = this.state.counter + 1;
     const questionId = this.state.questionId + 1;
     const { films } = this.state;
-    console.log(films)
+    //console.log(films)
+    const questions = films.map(film => ({
+      id: film.id,
+      question: film.description
+    }));
     this.setState({
       counter: counter,
       questionId: questionId,
-      question: this.state.films[counter].description,
+      question: questions[questionId - 1],
       answer: ''
     });
   }
 
 
   handleAnswerSelected(event) {
+    //console.log(event.target.value)
     this.setUserAnswer(event.currentTarget.value);
     if (this.state.questionId < this.state.films.length) {
       setTimeout(() => this.setNextQuestion(), 300);
     } else {
-      // do nothing for now
       setTimeout(() => this.setResults(this.getResults()), 300);
+
+    }
+
+  }
+
+  checkAnswers = (answer) => {
+    console.log(answer)
+    const { question } = this.state;
+    //(answer === question.id) ? alert('Correct!') : alert('Sorry, wrong answer')
+    if (answer === question.id) {
+      const { score } = this.state;
+      this.setState({
+        score: score + 1
+      });
+
+    } else {
 
     }
   }
 
   render() {
 
-    console.log(this.state.answerOptions)
+    //console.log(this.state.answer)
+    //console.log(this.state.question)
+    console.log(this.state.score)
     return (
       <div>
         <Game

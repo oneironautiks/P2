@@ -5,7 +5,7 @@ const Questions = (props) => {
   return (
     <div>
       <ul>
-        <li>{props.content}</li>
+        <li>{props.content.question}</li>
       </ul>
     </div>
   )
